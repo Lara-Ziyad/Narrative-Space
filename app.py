@@ -9,6 +9,8 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret')  # Session security
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'         # SQLite DB configuration
 
 # Bind SQLAlchemy to the app
 db.init_app(app)
