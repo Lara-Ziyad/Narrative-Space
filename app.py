@@ -2,6 +2,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from models import db, User
 import os
+from flask_login import LoginManager
 
 # Load environment variables from .env file
 load_dotenv()
@@ -13,6 +14,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'         # SQLite 
 
 # Bind SQLAlchemy to the app
 db.init_app(app)
+
+# Setup Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Basic route to test the API
 @app.route('/')
