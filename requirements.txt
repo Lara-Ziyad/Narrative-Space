@@ -1,0 +1,9 @@
+flask
+flask_sqlalchemy
+flask_bcrypt
+flask_login
+openai
+requests
+python-dotenv
+sentence-transformers
+faiss-cpu
