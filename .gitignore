@@ -1,0 +1,33 @@
+# 🐍 Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 🔐 Environment & virtualenv
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# 🛠️ IDE-specific settings
+.idea/
+.vscode/
+
+# 📦 Dependency cache
+*.egg-info/
+dist/
+build/
+
+# 🗃️ SQLite DB (optional: remove if you want to include it)
+db.sqlite3
+
+# 📸 Generated images (optional: if used)
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# 🚀 Other
+.DS_Store
