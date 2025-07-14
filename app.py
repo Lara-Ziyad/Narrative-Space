@@ -1,7 +1,6 @@
 from flask import Flask
 from dotenv import load_dotenv
 from models import db
-from flask_sqlalchemy import SQLAlchemy
 import os
 
 # Load environment variables from .env file

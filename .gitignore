@@ -20,7 +20,7 @@ ENV/
 dist/
 build/
 
-# 🗃️ SQLite DB (optional: remove if you want to include it)
+# 🗃️ SQLite DB
 db.sqlite3
 
 # 📸 Generated images (optional: if used)
