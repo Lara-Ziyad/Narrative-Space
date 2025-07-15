@@ -2,7 +2,7 @@ from flask import Flask,  request, jsonify
 from dotenv import load_dotenv
 from models import db, User
 import os
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_bcrypt import Bcrypt
 
 # Load environment variables from .env file
@@ -72,6 +72,13 @@ def login():
         return jsonify({'message': 'Login successful'}), 200
 
     return jsonify({'message': 'Invalid email or password'}), 401
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'Logged out successfully'}), 200
+
 
 if __name__ == '__main__':
     with app.app_context():
