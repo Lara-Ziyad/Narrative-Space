@@ -1,6 +1,6 @@
 # NarrativeSpace – Generative AI Assistant for Spatial and Literary Narratives
 
-## �� Project Descriptionس
+## �� Project Descriptions
 
 
 ArchiNarrate is an AI-powered web app that transforms architectural/spatial descriptions into creative outputs like:
