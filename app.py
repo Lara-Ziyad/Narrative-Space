@@ -4,6 +4,7 @@ from models import db, User
 import os
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+import openai
 
 # Load environment variables from .env file
 load_dotenv()
@@ -23,6 +24,10 @@ bcrypt = Bcrypt(app)
 # Setup Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Add OpenAI
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 @login_manager.user_loader
 def load_user(user_id):
