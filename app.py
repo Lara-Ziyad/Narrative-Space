@@ -2,7 +2,7 @@ from flask import Flask,  request, jsonify
 from dotenv import load_dotenv
 from models import db, User
 import os
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 
 # Load environment variables from .env file
@@ -79,6 +79,18 @@ def logout():
     logout_user()
     return jsonify({'message': 'Logged out successfully'}), 200
 
+@app.route('/profile')
+@login_required
+def profile():
+    return jsonify({
+        'message': 'Welcome to your profile',
+        'username': current_user.username,
+        'email': current_user.email
+    })
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify({'message': 'You are not logged in. Please log in to continue.'}), 401
 
 if __name__ == '__main__':
     with app.app_context():
