@@ -93,6 +93,14 @@ def profile():
         'email': current_user.email
     })
 
+@app.route('/openai-status')
+def openai_status():
+    try:
+        models = openai.Model.list()
+        return jsonify({"status": "OpenAI connected", "models": len(models.data)})
+    except Exception as e:
+        return jsonify({"status": "Error", "details": str(e)}), 500
+
 @login_manager.unauthorized_handler
 def unauthorized():
     return jsonify({'message': 'You are not logged in. Please log in to continue.'}), 401
