@@ -93,6 +93,11 @@ def profile():
         'email': current_user.email
     })
 
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify({'message': 'You are not logged in. Please log in to continue.'}), 401
+
 @app.route('/openai-status')
 def openai_status():
     try:
@@ -101,9 +106,12 @@ def openai_status():
     except Exception as e:
         return jsonify({"status": "Error", "details": str(e)}), 500
 
-@login_manager.unauthorized_handler
-def unauthorized():
-    return jsonify({'message': 'You are not logged in. Please log in to continue.'}), 401
+@app.route('/generate', methods=['POST'])
+def generate():
+    return jsonify({
+        'message': 'This will be the AI response.'
+    }), 200
+
 
 if __name__ == '__main__':
     with app.app_context():
