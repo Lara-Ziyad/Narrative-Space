@@ -4,7 +4,7 @@ from models import db, User
 import os
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
-import openai
+from openai import OpenAI
 
 # Load environment variables from .env file
 load_dotenv()
@@ -26,8 +26,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 # Add OpenAI
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -107,10 +106,30 @@ def openai_status():
         return jsonify({"status": "Error", "details": str(e)}), 500
 
 @app.route('/generate', methods=['POST'])
+@login_required
 def generate():
-    return jsonify({
-        'message': 'This will be the AI response.'
-    }), 200
+    data = request.get_json()
+    prompt = data.get('prompt')
+
+    if not prompt:
+        return jsonify({'error': 'Prompt is required'}), 400
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=150
+        )
+
+        reply = response['choices'][0]['message']['content']
+
+        return jsonify({'response': reply}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
