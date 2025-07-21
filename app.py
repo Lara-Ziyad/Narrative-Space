@@ -97,13 +97,14 @@ def profile():
 def unauthorized():
     return jsonify({'message': 'You are not logged in. Please log in to continue.'}), 401
 
-@app.route('/openai-status')
-def openai_status():
+@app.route('/models', methods=['GET'])
+@login_required
+def list_models():
     try:
-        models = openai.Model.list()
-        return jsonify({"status": "OpenAI connected", "models": len(models.data)})
+        models = client.models.list()
+        return jsonify([model.id for model in models]), 200
     except Exception as e:
-        return jsonify({"status": "Error", "details": str(e)}), 500
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/generate', methods=['POST'])
 @login_required
