@@ -41,6 +41,4 @@ class Conversation(db.Model):
     augmented_prompt = db.Column(db.Text)
     output_text = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
-
-
     user = relationship("User", backref="conversations")

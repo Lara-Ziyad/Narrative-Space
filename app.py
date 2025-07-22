@@ -1,6 +1,6 @@
 from flask import Flask,  request, jsonify
 from dotenv import load_dotenv
-from models import db, User
+from models import db, User, Conversation
 import os
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
@@ -8,7 +8,6 @@ from openai import OpenAI
 
 # Load environment variables from .env file
 load_dotenv()
-
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -127,6 +126,18 @@ def generate():
 
         reply = response['choices'][0]['message']['content']
 
+        # Save the conversation to the database
+        conv = Conversation(
+            user_id=current_user.id,
+            style=data.get('style'),
+            model_used=data.get('model', 'gpt-3.5-turbo'),
+            prompt=prompt,
+            augmented_prompt=prompt,  # or the augmented version if using RAG
+            output_text=reply
+        )
+        db.session.add(conv)
+        db.session.commit()
+
         return jsonify({'response': reply}), 200
 
     except Exception as e:
@@ -135,6 +146,9 @@ def generate():
 
 if __name__ == '__main__':
     with app.app_context():
+        db.drop_all()
+        print("🔻 Dropped all tables")
         db.create_all()
+        print("🔺 Creates tables")
     app.run(host="0.0.0.0", port=8000, debug=True)
 print(User)
