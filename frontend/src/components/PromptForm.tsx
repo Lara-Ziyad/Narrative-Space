@@ -19,7 +19,8 @@ const PromptForm: React.FC = () => {
       });
       setResponse(data.response);
     } catch (err) {
-      setResponse('⚠️ Error generating response.');
+        console.error('❌ Error generating response:', err);
+      setResponse('⚠️ Something gone wrong.');
     }
   };
 
@@ -51,7 +52,7 @@ const PromptForm: React.FC = () => {
       {response && (
         <div className="mt-8 whitespace-pre-wrap">
           <h3 className="text-lg font-medium text-amberwood mb-2">📝 Generated Narrative:</h3>
-          <p>{response}</p>
+          <p >{response}</p>
         </div>
       )}
     </div>

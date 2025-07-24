@@ -7,7 +7,7 @@ type GenerateRequest = {
 };
 
 export async function generateResponse(data: GenerateRequest): Promise<{ response: string }> {
-  const res = await fetch(`${BASE_URL}/generate`, {
+  const res = await fetch(`${BASE_URL}/ai/generate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -5,13 +5,15 @@ from .main.routes import main_bp
 from .auth.routes import auth_bp
 from .ai.routes import ai_bp
 from backend.extensions import db, bcrypt, login_manager, client
+from flask_cors import CORS
+
 
 
 def create_app():
     load_dotenv()
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret')
-
+    CORS(app, supports_credentials=True)
     # Set a reliable absolute path for SQLite
     basedir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(basedir, '..', 'instance', 'db.sqlite3')
