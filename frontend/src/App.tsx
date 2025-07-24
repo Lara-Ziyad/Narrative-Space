@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PromptForm from './components/PromptForm';
 import HistoryPanel from './components/HistoryPanel';
+import { fetchHistory } from './api';
+import type { HistoryEntry } from './types';
 
 const App: React.FC = () => {
+    const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+    const refreshHistory = async () => {try {
+        const data = await fetchHistory();
+        setHistory(data);
+      } catch (err) {console.error("⚠️ Failed to refresh history");}
+  };
+
+    useEffect(() => {refreshHistory();
+        }, []);
+
+    useEffect(() => {
+  console.log("🔥 Updated history:", history);
+}, [history]);
+
   return (
     <div className="app-container">
       <img
@@ -16,13 +33,13 @@ const App: React.FC = () => {
         <p className="app-subtitle">Generative AI for Architectural Narratives</p>
       </header>
 
-      <main className="app-main mb-64 mt-16">
-        <PromptForm />
+      <main className="app-main mb-14 mt-14">
+        <PromptForm onNewEntry={refreshHistory} />
       </main>
 
 
       <main className="app-main mt-10">
-        <HistoryPanel  />
+        <HistoryPanel history={history} />
       </main>
     </div>
   );

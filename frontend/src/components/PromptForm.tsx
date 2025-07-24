@@ -1,9 +1,12 @@
 import { useState, FormEvent } from 'react';
-import { generateResponse } from '../api';
+import { generateResponse, fetchHistory } from '../api';
 import ModelSelector from './ModelSelector';
 import NarrativeTypeSelector from './NarrativeTypeSelector';
 
-const PromptForm: React.FC = () => {
+type PromptFormProps = {
+  onNewEntry?: () => void;
+};
+const PromptForm: React.FC<PromptFormProps> = ({ onNewEntry }) => {
   const [prompt, setPrompt] = useState<string>('');
   const [narrativeType, setNarrativeType] = useState<string>('poetic');
   const [model, setModel] = useState<string>('4.1-mini');
@@ -18,6 +21,11 @@ const PromptForm: React.FC = () => {
         model,
       });
       setResponse(data.response);
+
+       if (onNewEntry) {
+        onNewEntry();
+      }
+
     } catch (err) {
         console.error('❌ Error generating response:', err);
       setResponse('⚠️ Something gone wrong.');
