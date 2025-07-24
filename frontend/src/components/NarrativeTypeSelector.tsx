@@ -9,8 +9,11 @@ const NarrativeTypeSelector: React.FC<NarrativeTypeSelectorProps> = ({ narrative
   return (
     <label>
       Narrative Style:
-      <select value={narrativeType} onChange={(e) => onChange(e.target.value)}
-        className="form-glass">
+      <select
+        value={narrativeType}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
+        className="form-glass"
+      >
         <option value="poetic">Poetic</option>
         <option value="philosophical">Philosophical</option>
         <option value="critical">Critical</option>

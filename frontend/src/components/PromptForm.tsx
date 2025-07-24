@@ -3,13 +3,13 @@ import { generateResponse } from '../api';
 import ModelSelector from './ModelSelector';
 import NarrativeTypeSelector from './NarrativeTypeSelector';
 
-function PromptForm() {
+const PromptForm: React.FC = () => {
   const [prompt, setPrompt] = useState<string>('');
   const [narrativeType, setNarrativeType] = useState<string>('poetic');
   const [model, setModel] = useState<string>('gpt-4');
   const [response, setResponse] = useState<string>('');
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const data = await generateResponse({
@@ -23,40 +23,39 @@ function PromptForm() {
     }
   };
 
-return (
-  <div className="section-wrapper">
-    <h2 className="section-title">Describe Your Space</h2>
-    <form onSubmit={handleSubmit}>
-      <textarea
-        className="form-glass"
-        rows={4}
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        placeholder="Enter architectural or imaginative space..."
-      />
+  return (
+    <div className="section-wrapper">
+      <h2 className="section-title">Describe Your Space</h2>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          className="form-glass"
+          rows={4}
+          value={prompt}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
+          placeholder="Enter architectural or imaginative space..."
+        />
 
-      <div className="form-spacing">
-        <NarrativeTypeSelector narrativeType={narrativeType} onChange={setNarrativeType} />
-      </div>
+        <div className="form-spacing">
+          <NarrativeTypeSelector narrativeType={narrativeType} onChange={setNarrativeType} />
+        </div>
 
-      <div className="form-spacing">
-        <ModelSelector model={model} onChange={setModel} />
-      </div>
+        <div className="form-spacing">
+          <ModelSelector model={model} onChange={setModel} />
+        </div>
 
-      <button type="submit" className="submit-btn">
-        Generate
-      </button>
-    </form>
+        <button type="submit" className="submit-btn">
+          Generate
+        </button>
+      </form>
 
-    {response && (
-      <div className="mt-8 whitespace-pre-wrap">
-        <h3 className="text-lg font-medium text-amberwood mb-2">📝 Generated Narrative:</h3>
-        <p>{response}</p>
-      </div>
-    )}
-  </div>
-);
-
-}
+      {response && (
+        <div className="mt-8 whitespace-pre-wrap">
+          <h3 className="text-lg font-medium text-amberwood mb-2">📝 Generated Narrative:</h3>
+          <p>{response}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default PromptForm;

@@ -9,8 +9,11 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ model, onChange }) => {
   return (
     <label>
       AI Model:
-      <select value={model} onChange={(e) => onChange(e.target.value)}
-        className="form-glass">
+      <select
+        value={model}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
+        className="form-glass"
+      >
         <option value="gpt-4">GPT-4</option>
         <option value="claude">Claude</option>
         <option value="gemini">Gemini</option>
