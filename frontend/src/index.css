@@ -5,7 +5,7 @@
 
 /* === Global styles === */
 body {
-  @apply bg-forestDark/95 text-cream font-modern;
+  @apply bg-forestDark/95 text-cream font-modern ;
 }
 
 /* === Shared glow effect === */
@@ -21,13 +21,13 @@ body {
     @apply
       w-full
       p-4
-      bg-white/10
       backdrop-blur-md
       text-cream
       placeholder-cream/50
       border
-      border-amberwood
-      rounded-lg
+      border-dustblue/30 p-4
+      rounded-md
+      bg-white/5
       shadow-[0_0_10px_rgba(255,255,255,0.05)]
       focus:outline-none
       focus:ring-2
@@ -40,7 +40,7 @@ body {
   }
   /* === PromptForm Component === */
   .section-wrapper {
-    @apply max-w-3xl mx-auto;
+    @apply max-w-3xl mx-auto ;
   }
 
   .section-title {
@@ -57,7 +57,7 @@ body {
 
   /* === App Component === */
   .app-container {
-    @apply min-h-screen p-6;
+    @apply min-h-screen p-10;
   }
 
   .app-header {
@@ -74,6 +74,35 @@ body {
   }
 
   .app-main {
-    @apply max-w-4xl mx-auto bg-forestDark rounded-xl p-10 shadow-xl backdrop-blur-md shadow-[0_0_10px_rgba(255,255,255,0.05)];
+    @apply border border-amberwood/50 max-w-4xl mx-auto bg-forestDark rounded-xl p-10 shadow-xl backdrop-blur-md shadow-[0_0_10px_rgba(255,255,255,0.05)];
+  }
+
+  /* === HistoryPanel === */
+  .history-panel {
+    @apply mt-10;
+  }
+
+  .history-heading {
+    @apply text-2xl text-amberwood font-semibold mb-4;
+  }
+
+  .history-error {
+    @apply text-red-400 bg-red-800/20 border border-red-500 text-red-300 p-4 rounded-md shadow-md mb-4  ;
+  }
+
+  .history-empty {
+    @apply text-dustblue italic ;
+  }
+
+  .history-entry {
+    @apply border border-dustblue/30 p-4 rounded-md bg-white/5;
+  }
+
+  .history-prompt {
+    @apply text-sm text-cream/70 mb-2;
+  }
+
+  .history-response {
+    @apply text-sm text-cream/90 whitespace-pre-wrap;
   }
 }

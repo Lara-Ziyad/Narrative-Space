@@ -6,7 +6,7 @@ import NarrativeTypeSelector from './NarrativeTypeSelector';
 const PromptForm: React.FC = () => {
   const [prompt, setPrompt] = useState<string>('');
   const [narrativeType, setNarrativeType] = useState<string>('poetic');
-  const [model, setModel] = useState<string>('gpt-4');
+  const [model, setModel] = useState<string>('4.1-mini');
   const [response, setResponse] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

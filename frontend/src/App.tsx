@@ -1,5 +1,6 @@
 import React from 'react';
 import PromptForm from './components/PromptForm';
+import HistoryPanel from './components/HistoryPanel';
 
 const App: React.FC = () => {
   return (
@@ -15,8 +16,13 @@ const App: React.FC = () => {
         <p className="app-subtitle">Generative AI for Architectural Narratives</p>
       </header>
 
-      <main className="app-main">
+      <main className="app-main mb-64 mt-16">
         <PromptForm />
+      </main>
+
+
+      <main className="app-main mt-10">
+        <HistoryPanel  />
       </main>
     </div>
   );
