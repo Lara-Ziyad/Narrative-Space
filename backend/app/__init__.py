@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from .main.routes import main_bp
 from .auth.routes import auth_bp
 from .ai.routes import ai_bp
-from extensions import db, bcrypt, login_manager, client
+from backend.extensions import db, bcrypt, login_manager, client
 
 
 def create_app():
@@ -32,8 +32,8 @@ def create_app():
 
     # ensure DB tables exist
     with app.app_context():
-        db.drop_all()
-        print("🔻 Dropped all tables")
+        # db.drop_all()
+        # print("🔻 Dropped all tables")
         db.create_all()
         print("🔺 Creates tables")
 
