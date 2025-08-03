@@ -6,6 +6,7 @@ from .auth.routes import auth_bp
 from .ai.routes import ai_bp
 from backend.extensions import db, bcrypt, login_manager, client
 from flask_cors import CORS
+from .ai.generate import generate_bp
 
 
 
@@ -31,6 +32,7 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(ai_bp, url_prefix='/ai')
+    app.register_blueprint(generate_bp, url_prefix='/ai')
 
     # ensure DB tables exist
     with app.app_context():
