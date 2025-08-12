@@ -91,7 +91,7 @@ body {
   }
 
   .history-empty {
-    @apply text-dustblue italic ;
+    @apply text-phosGreen italic ;
   }
 
   .history-entry {
@@ -105,4 +105,36 @@ body {
   .history-response {
     @apply text-sm text-cream/90 whitespace-pre-wrap;
   }
+
+    /* === Auth Forms: Login / Register === */
+  .auth-form-container {
+    @apply max-w-4xl mx-auto flex flex-col md:flex-row gap-6;
+  }
+
+  .auth-form-box {
+    @apply flex-1 bg-white/5 rounded-md p-6 shadow-md backdrop-blur-md border border-dustblue/30 flex flex-col justify-center;
+  }
+
+  .auth-title {
+    @apply text-2xl text-amberwood font-bold mb-4 text-center;
+  }
+
+  .auth-input {
+    @apply w-full px-4 py-2 bg-white/10 text-cream placeholder-cream/50 border border-dustblue/30 rounded-md focus:outline-none focus:ring-2 focus:ring-sunrose transition-all duration-200 mt-3;
+  }
+
+  .auth-button {
+    @apply w-full mt-6 bg-amberwood/90 text-white py-2 rounded-md hover:bg-amberwood transition;
+  }
+
+  .auth-link {
+    @apply text-sm text-phosGreen text-center block mt-4 hover:underline;
+  }
+
+  .auth-error {
+    @apply text-red-400 text-sm bg-red-900/20 p-2 mt-2 rounded;
+  }
+
+
+
 }

@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { generateResponse, fetchHistory } from '../api';
+import { generateResponse, fetchHistory } from '@api';
 import ModelSelector from './ModelSelector';
 import NarrativeTypeSelector from './NarrativeTypeSelector';
 

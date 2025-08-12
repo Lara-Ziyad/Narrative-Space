@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import PromptForm from './components/PromptForm';
-import HistoryPanel from './components/HistoryPanel';
-import { fetchHistory } from './api';
-import type { HistoryEntry } from './types';
+import React from 'react';
+import AuthForms from './components/auth/AuthForms';
+import PromptForm from './components/prompt/PromptForm';
+import HistoryPanel from './components/history/HistoryPanel';
+import { HistoryProvider, useHistoryContext } from './context/HistoryContext';
 
-const App: React.FC = () => {
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
-
-    const refreshHistory = async () => {try {
-        const data = await fetchHistory();
-        setHistory(data);
-      } catch (err) {console.error("⚠️ Failed to refresh history");}
-  };
-
-    useEffect(() => {refreshHistory();
-        }, []);
-
-    useEffect(() => {
-  console.log("🔥 Updated history:", history);
-}, [history]);
+const MainContent: React.FC = () => {
+  const { history, loadHistory } = useHistoryContext();
 
   return (
     <div className="app-container">
@@ -33,15 +20,27 @@ const App: React.FC = () => {
         <p className="app-subtitle">Generative AI for Architectural Narratives</p>
       </header>
 
-      <main className="app-main mb-14 mt-14">
-        <PromptForm onNewEntry={refreshHistory} />
-      </main>
+      <div>
+        <AuthForms />
+      </div>
 
+      <main className="app-main mb-14 mt-14">
+        {/* When generation is done, reload history */}
+        <PromptForm onNewEntry={loadHistory} />
+      </main>
 
       <main className="app-main mt-10">
         <HistoryPanel history={history} />
       </main>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <HistoryProvider>
+      <MainContent />
+    </HistoryProvider>
   );
 };
 

@@ -1,7 +1,7 @@
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
-export default function AuthPage() {
+export default function AuthForms() {
   return (
 
       <div className="auth-form-container">
