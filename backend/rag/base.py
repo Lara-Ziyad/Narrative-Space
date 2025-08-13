@@ -8,3 +8,7 @@ class BaseRetriever(ABC):
     @abstractmethod
     def search(self, query: str, top_k=3, where: dict = None) -> list[str]:
         pass
+
+    @abstractmethod
+    def clear(self):
+        pass

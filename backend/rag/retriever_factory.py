@@ -1,7 +1,11 @@
-from .faiss_retriever import FaissRetriever
-from .chroma_retriever import ChromaRetriever
+import os
+from .chroma import ChromaRetriever
+from .faiss import FaissRetriever
 
-def get_retriever(mode: str = "faiss"):
+def get_retriever(mode: str | None = None):
+    mode = (mode or os.environ.get("RAG_BACKEND", "chroma")).lower()
     if mode == "chroma":
         return ChromaRetriever()
-    return FaissRetriever()
+    if mode == "faiss":
+        return FaissRetriever()
+    raise ValueError(f"Unknown retriever mode: {mode}")

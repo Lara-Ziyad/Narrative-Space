@@ -5,6 +5,7 @@ from .main.routes import main_bp
 from .auth.routes import auth_bp
 from .ai.routes import ai_bp
 from backend.extensions import db, bcrypt, login_manager, client
+from .ai import ai_bp
 from flask_cors import CORS
 from .ai.generate import generate_bp
 
