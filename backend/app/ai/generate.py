@@ -4,6 +4,7 @@ from backend.extensions import db
 from backend.models import Conversation
 from backend.prompts.templates import get_prompt_template
 from backend.rag.retriever_factory import get_retriever
+
 generate_bp = Blueprint("generate", __name__)
 
 @generate_bp.route("/generate", methods=["POST"])
@@ -13,7 +14,8 @@ def generate():
 
     prompt = data.get("prompt", "").strip()
     style = data.get("style", "poetic")
-    retrieval_mode = data.get("retrieval_mode", "faiss")  # 👈 user can choose FAISS or Chroma
+    retrieval_mode = data.get("retrieval_mode", "faiss")  # user can choose FAISS or Chroma
+    top_k = data.get("top_k", 3)  # allow control from frontend
 
     if not prompt:
         return jsonify({"error": "Prompt is required"}), 400
@@ -22,12 +24,14 @@ def generate():
     retriever = get_retriever(mode=retrieval_mode)
 
     # Retrieve context from knowledge base
-    context_chunks = retriever.search(query=prompt, top_k=1)
-    context = context_chunks[0] if context_chunks else ""
+    hits = retriever.search(query=prompt, top_k=top_k)
+    context_text = "\n".join(
+        [hit["text"] if isinstance(hit, dict) else str(hit) for hit in hits]
+    )
 
     # Inject context into prompt template
     template = get_prompt_template(style)
-    final_prompt = template.format(context=context, prompt=prompt)
+    final_prompt = template.format(context=context_text, prompt=prompt)
 
     # Generate output using OpenAI
     client = current_app.openai_client
@@ -54,7 +58,11 @@ def generate():
         db.session.add(conv)
         db.session.commit()
 
-        return jsonify({"output": reply}), 200
+        return jsonify({
+            "output": reply,
+            "sources": hits,
+            "retrieval_mode": retrieval_mode
+        }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
