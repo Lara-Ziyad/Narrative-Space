@@ -13,13 +13,15 @@ const PromptForm: React.FC<PromptFormProps> = ({ onNewEntry }) => {
   const [model, setModel] = useState<string>('4.1-mini');
   const [response, setResponse] = useState<string>('');
   const [retrievalMode, setRetrievalMode] = useState<string>('faiss');
+  const [error, setError] = useState<string>("");
+   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!prompt.trim()) return;
-
     setLoading(true);
     setResponse('');
+    setError("");
 
     try {
       const data = await generateResponse({
@@ -33,7 +35,7 @@ const PromptForm: React.FC<PromptFormProps> = ({ onNewEntry }) => {
       onNewEntry?.();
     } catch (err) {
       console.error('❌ Error generating response:', err);
-      setResponse('⚠️ Something went wrong.');
+      setError(err?.message || '⚠️ Something went wrong.');
     } finally {
       setLoading(false);
     }

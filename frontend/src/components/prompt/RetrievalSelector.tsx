@@ -15,7 +15,6 @@ const RetrievalSelector: React.FC<RetrievalSelectorProps> = ({ retrievalMode, on
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
           className="form-glass"
         >
-          {/* User-friendly labels; still sends "faiss" / "chroma" to backend */}
           <option value="faiss">Fast semantic search (Vector Index)</option>
           <option value="chroma">Precise search with filters (Metadata)</option>
         </select>
