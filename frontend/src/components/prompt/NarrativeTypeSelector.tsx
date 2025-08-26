@@ -8,7 +8,7 @@ type NarrativeTypeSelectorProps = {
 const NarrativeTypeSelector: React.FC<NarrativeTypeSelectorProps> = ({ narrativeType, onChange }) => {
   return (
     <label>
-      Narrative Style:
+      <span className="text-amberwood">Narrative Style:</span>
       <select
         value={narrativeType}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}

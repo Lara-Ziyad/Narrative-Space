@@ -8,13 +8,13 @@ type ModelSelectorProps = {
 const ModelSelector: React.FC<ModelSelectorProps> = ({ model, onChange }) => {
   return (
     <label>
-      AI Model:
+      <span className="text-amberwood">AI Model:</span>
       <select
         value={model}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
         className="form-glass"
       >
-        <option value="gpt-4">GPT-4</option>
+        <option value="4.1-mini">GPT-4.1 Mini</option>
         <option value="claude">Claude</option>
         <option value="gemini">Gemini</option>
         <option value="llama">LLaMA</option>

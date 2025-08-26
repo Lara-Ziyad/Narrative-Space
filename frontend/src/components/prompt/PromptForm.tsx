@@ -2,6 +2,7 @@ import { useState, FormEvent } from 'react';
 import { generateResponse, fetchHistory } from '@api';
 import ModelSelector from './ModelSelector';
 import NarrativeTypeSelector from './NarrativeTypeSelector';
+import RetrievalSelector from './RetrievalSelector';
 
 type PromptFormProps = {
   onNewEntry?: () => void;
@@ -11,24 +12,30 @@ const PromptForm: React.FC<PromptFormProps> = ({ onNewEntry }) => {
   const [narrativeType, setNarrativeType] = useState<string>('poetic');
   const [model, setModel] = useState<string>('4.1-mini');
   const [response, setResponse] = useState<string>('');
+  const [retrievalMode, setRetrievalMode] = useState<string>('faiss');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!prompt.trim()) return;
+
+    setLoading(true);
+    setResponse('');
+
     try {
       const data = await generateResponse({
         prompt,
-        type: narrativeType,
+        style: narrativeType,
         model,
+        retrieval_mode: retrievalMode,
       });
-      setResponse(data.response);
 
-       if (onNewEntry) {
-        onNewEntry();
-      }
-
+      setResponse(data?.output ?? 'No output received.');
+      onNewEntry?.();
     } catch (err) {
-        console.error('❌ Error generating response:', err);
-      setResponse('⚠️ Something gone wrong.');
+      console.error('❌ Error generating response:', err);
+      setResponse('⚠️ Something went wrong.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,6 +57,10 @@ const PromptForm: React.FC<PromptFormProps> = ({ onNewEntry }) => {
 
         <div className="form-spacing">
           <ModelSelector model={model} onChange={setModel} />
+        </div>
+
+        <div className="form-spacing">
+          <RetrievalSelector retrievalMode={retrievalMode} onChange={setRetrievalMode} />
         </div>
 
         <button type="submit" className="submit-btn">
