@@ -1,10 +1,13 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+import type { HistoryItem } from '../context/HistoryContext';
+
 type GenerateRequest = {
   prompt: string;
   type: string;
   model: string;
 };
+
 
 export async function generateResponse(data: GenerateRequest): Promise<{ response: string }> {
   const res = await fetch(`${BASE_URL}/ai/generate`, {
@@ -21,7 +24,7 @@ export async function generateResponse(data: GenerateRequest): Promise<{ respons
 }
 
 
-export async function fetchHistory(): Promise<HistoryEntry[]> {
+export async function fetchHistory(): Promise<HistoryItem[]> {
   const res = await fetch(`${BASE_URL}/ai/history`, {
     credentials: 'include',
   });
