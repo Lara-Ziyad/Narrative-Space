@@ -46,11 +46,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Loads the current session user from the backend.
-   * Never throws — errors are stored in `error` so the UI won't crash.
-   * Make sure your fetchProfile() uses `credentials: 'include'`.
-   */
   const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -66,10 +61,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+
   /** Logs out on the server and clears local state */
   const logout = useCallback(async () => {
     try {
-      await apiLogout(); // POST /auth/logout with credentials
+      await apiLogout();
     } catch (e) {
       console.error('logout failed:', e);
     } finally {

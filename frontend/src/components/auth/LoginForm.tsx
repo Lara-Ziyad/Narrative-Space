@@ -2,7 +2,7 @@ import { useState } from 'react';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 import { fetchHistory } from '@api';
 import { useHistoryContext } from '../../context/HistoryContext';
-
+import { useAuth } from '../../context/AuthContext';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -10,6 +10,7 @@ export default function LoginForm() {
   const [error, setError] = useState('');
 
   const { loadHistory } = useHistoryContext();
+  const { refresh } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ export default function LoginForm() {
         throw new Error(data.message || 'Login failed');
       }
 
+      await refresh();
       alert('✅ Logged in successfully');
       await loadHistory();
     } catch (err: any) {
