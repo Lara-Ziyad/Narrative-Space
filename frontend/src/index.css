@@ -61,7 +61,7 @@ body {
   }
 
   .app-header {
-    @apply text-center ;
+    @apply text-center  ;
   }
 
   .app-title {
@@ -135,6 +135,9 @@ body {
     @apply text-red-400 text-sm bg-red-900/20 p-2 mt-2 rounded;
   }
 
+ .logout-btn {
+  @apply bg-transparent text-orange-600 hover:text-orange-800 font-medium;
+}
 
 
 }

@@ -5,7 +5,7 @@ import HistoryPanel from './components/history/HistoryPanel';
 import { HistoryProvider, useHistoryContext } from './context/HistoryContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoadingSpinner from './components/layout/LoadingSpinner';
-
+import LogoutButton from './components/layout/LogoutButton'
 
 const MainContent: React.FC = () => {
     const { user, loading: authLoading, error: authError } = useAuth();
@@ -26,7 +26,11 @@ const MainContent: React.FC = () => {
             <header className="app-header">
               <h1 className="app-title">Narrative Space</h1>
               <p className="app-subtitle">Generative AI for Architectural Narratives</p>
+
             </header>
+            <div className="flex justify-end">
+                <LogoutButton />
+              </div>
 
             {authLoading && <LoadingSpinner />}
 
@@ -44,10 +48,8 @@ const MainContent: React.FC = () => {
 
       {!authLoading && user && (
         <>
-         <div>
-             <AuthForms />
-         </div>
-          <main className="app-main mb-14 mt-14">
+
+          <main className="app-main mb-14 mt-4">
             <PromptForm onNewEntry={loadHistory} />
           </main>
           <main className="app-main mt-10">
