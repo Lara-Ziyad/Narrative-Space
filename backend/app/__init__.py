@@ -9,6 +9,8 @@ from .ai import ai_bp
 from flask_cors import CORS
 from .ai.generate import generate_bp
 
+from openai import OpenAI
+
 
 
 def create_app():
@@ -16,6 +18,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret')
     CORS(app, supports_credentials=True)
+    app.openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
     # Set a reliable absolute path for SQLite
     basedir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(basedir, '..', 'instance', 'db.sqlite3')

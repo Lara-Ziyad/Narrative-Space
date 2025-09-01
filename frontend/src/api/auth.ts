@@ -14,6 +14,10 @@ export async function register(data: RegisterData): Promise<{ message: string }>
     body: JSON.stringify(data),
   });
 
+   if (res.status === 409) {
+    throw new Error(data?.message || 'This email or username is already registered');
+  }
+
   if (!res.ok) throw new Error('Failed to register');
   return res.json();
 }

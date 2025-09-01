@@ -46,14 +46,21 @@ body {
   .section-title {
     @apply text-2xl mb-2 text-cream;
   }
+  .bg-pic{
+  @apply absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none z-0}
 
   .form-spacing {
     @apply my-4;
   }
 
   .submit-btn {
-    @apply w-full mt-6 mb-8 bg-amberwood/90 text-white  py-2 px-5 rounded-md hover:bg-amberwood transition;
+    @apply w-full mt-6 mb-8 bg-amberwood text-white  py-2 px-5 rounded-md hover:bg-amberwood/80 transition duration-200 active:bg-amberwood/70 active:scale-95 active:shadow-inner;
   }
+  .submit-btn-span {
+      @applyflex items-center
+      }
+
+  .submit-btn-generating {@applyflex mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-t-transparent border-white}
 
   /* === App Component === */
   .app-container {
@@ -76,7 +83,9 @@ body {
   .app-main {
     @apply border border-amberwood/50 max-w-4xl mx-auto bg-forestDark rounded-xl p-10 shadow-xl backdrop-blur-md shadow-[0_0_10px_rgba(255,255,255,0.05)];
   }
-
+  .logout-btn {
+   @apply flex justify-end
+   }
   /* === HistoryPanel === */
   .history-panel {
     @apply mt-10;

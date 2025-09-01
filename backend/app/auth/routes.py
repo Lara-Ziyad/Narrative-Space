@@ -17,7 +17,7 @@ def register():
     password = data.get('password')
 
     # Check if username or email already exists
-    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+    existing_user = User.query.filter( (User.email == email)).first()
     if existing_user:
         return jsonify({'message': 'Username or email already exists'}), 409
 
