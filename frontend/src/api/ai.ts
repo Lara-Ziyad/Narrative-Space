@@ -1,8 +1,4 @@
-// [NS-STEP6-PR1] Ensure BASE_URL is used so requests hit the backend.
-// Adjust the import path if your config file lives elsewhere.
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-
+import { BASE_URL } from './config';
 import type { HistoryItem } from '../context/HistoryContext';
 
 export type GenerateRequest = { prompt: string; type: string; model: string };
