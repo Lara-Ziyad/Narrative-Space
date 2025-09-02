@@ -1,65 +1,53 @@
+// [NS-STEP6-PR1] Ensure BASE_URL is used so requests hit the backend.
+// Adjust the import path if your config file lives elsewhere.
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 import type { HistoryItem } from '../context/HistoryContext';
 
-type GenerateRequest = {
-  prompt: string;
-  type: string;
-  model: string;
-};
-
-export type ProviderModel = {
-  provider: string;
-  id: string;
-  label?: string;
-};
+export type GenerateRequest = { prompt: string; type: string; model: string };
+export type ProviderModel = { provider: string; id: string; label?: string };
 
 export async function fetchModels(): Promise<ProviderModel[]> {
-  const res = await fetch(`${BASE_URL}/ai/models`, {
-    credentials: 'include',
-  });
+  // [NS-STEP6-PR1] Point to the versioned endpoint to avoid legacy collisions.
+  const url = `${BASE_URL}/ai/models`;
+  const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to list models');
-  return res.json();
-  const list = Array.isArray(raw) ? raw : [];
-  const normalized: ProviderModel[] = list
-    .map((m: any) => {
-      if (typeof m === 'string') {
-        return { provider: 'openai', id: m, label: `openai • ${m}` };
-      }
-      const id = m?.id ?? m?.model ?? m?.name ?? '';
-      if (!id) return null;
-      const provider = m?.provider ?? 'openai';
-      const label = m?.label ?? m?.display ?? `${provider} • ${id}`;
-      return { provider, id, label };
-    })
-    .filter(Boolean) as ProviderModel[];
+
+  const raw = await res.json(); // should be array of 6 objects
+  const arr = Array.isArray(raw) ? raw : (Array.isArray((raw as any)?.models) ? (raw as any).models : []);
+
+  const normalized: ProviderModel[] = (arr as any[]).map((m: any) => {
+    if (typeof m === 'string') {
+      return { provider: 'openai', id: m, label: m };
+    }
+    const id = m?.id ?? m?.model ?? m?.name ?? '';
+    if (!id) return null as any;
+    const provider = m?.provider ?? 'openai';
+    const label = m?.label ?? id;
+    return { provider, id, label };
+  }).filter(Boolean) as ProviderModel[];
+
+  // [NS-STEP6-PR1] Debug log (safe in dev)
+  // eslint-disable-next-line no-console
+  console.log('[ai/models] url:', url, 'raw:', raw, 'normalized:', normalized);
 
   return normalized;
 }
 
-export async function generateResponse(data: GenerateRequest): Promise<{ response: string }> {
+export async function generateResponse(data: GenerateRequest): Promise<{ output: string; sources?: any; retrieval_mode?: string }> {
   const res = await fetch(`${BASE_URL}/ai/generate`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({
-        prompt: data.prompt,
-      style: data.type,
-      model: data.model
-      }),
+    body: JSON.stringify({ prompt: data.prompt, style: data.type, model: data.model }),
   });
-
   if (!res.ok) throw new Error('Failed to generate');
   return res.json();
 }
 
 export async function fetchHistory(): Promise<HistoryItem[]> {
-  const res = await fetch(`${BASE_URL}/ai/history`, {
-    credentials: 'include',
-  });
-
+  const res = await fetch(`${BASE_URL}/ai/history`, { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to fetch history');
   return res.json();
 }

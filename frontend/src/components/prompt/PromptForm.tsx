@@ -12,7 +12,11 @@ const PromptForm: React.FC<PromptFormProps> = ({ onNewEntry }) => {
   const [prompt, setPrompt] = useState<string>('');
   const [narrativeType, setNarrativeType] = useState<string>('poetic');
 
-  const defaultModel = localStorage.getItem('ns.selectedModel') || 'openai:gpt-4o-mini';
+  const rawSaved = localStorage.getItem('ns.selectedModel');
+const defaultModel =
+  (rawSaved && !rawSaved.includes('undefined') && rawSaved.includes(':'))
+    ? rawSaved
+    : 'openai:gpt-4o-mini';
   const [model, setModel] = useState<string>(defaultModel);
 
   const [response, setResponse] = useState<string>('');

@@ -6,16 +6,6 @@ from flask import make_response
 
 ai_bp = Blueprint('ai', __name__)
 
-@ai_bp.route('/models', methods=['GET'])
-@login_required
-def list_models():
-    client = current_app.openai_client
-    try:
-        models = client.models.list()
-        return jsonify([model.id for model in models]), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 
 @ai_bp.route('/history', methods=['GET'])
 @login_required

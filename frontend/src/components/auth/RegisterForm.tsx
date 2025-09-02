@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { register } from '../../api/auth'; // adjust path if your alias is @api/auth
+import { useAuth } from '@context/AuthContext';
+import { register } from '@api/auth'; // adjust path if your alias is @api/auth
 
 export default function RegisterForm() {
   const [username, setUsername] = useState('');
