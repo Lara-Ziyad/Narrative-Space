@@ -2,7 +2,7 @@ import { BASE_URL } from './config';
 
 import type { HistoryItem } from '../context/HistoryContext';
 
-export type GenerateRequest = { prompt: string; type: string; model: string };
+export type GenerateRequest = { prompt: string; style: string; model: string };
 export type ProviderModel = { provider: string; id: string; label?: string };
 
 export async function fetchModels(): Promise<ProviderModel[]> {
@@ -38,7 +38,7 @@ export async function generateResponse(data: GenerateRequest): Promise<{ output:
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ prompt: data.prompt, style: data.type, model: data.model }),
+    body: JSON.stringify({ prompt: data.prompt, style: data.style, model: data.model }),
   });
   if (!res.ok) throw new Error('Failed to generate');
   return res.json();

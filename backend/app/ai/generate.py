@@ -63,13 +63,16 @@ def generate():
 
 
     client = getattr(current_app, "openai_client", None)
+
     try:
         def _do():
+            temp_map = {"poetic": 0.9, "philosophical": 0.6, "critical": 0.55, "fictional": 0.8}
+            temp = temp_map.get(style, 0.7)
             return generate_with_provider(
                 raw_model,
                 system=GUARD_SYSTEM,
                 user=final_prompt,
-                temperature=0.7,
+                temperature=temp,
                 max_tokens=300,
             )
 
