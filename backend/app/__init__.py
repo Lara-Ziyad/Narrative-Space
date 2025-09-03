@@ -42,7 +42,7 @@ def create_app():
         # print("🔻 Dropped all tables")
         db.create_all()
         print("🔺 Creates tables")
-
+        # Check routers
         print([r.rule for r in app.url_map.iter_rules() if r.rule.startswith("/ai/")])
         routes = sorted({r.rule for r in app.url_map.iter_rules() if r.rule.startswith("/ai/")})
         print("[NS] AI routes:", routes)

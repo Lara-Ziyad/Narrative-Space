@@ -1,4 +1,5 @@
 import { BASE_URL } from './config';
+
 import type { HistoryItem } from '../context/HistoryContext';
 
 export type GenerateRequest = { prompt: string; type: string; model: string };
@@ -6,7 +7,7 @@ export type ProviderModel = { provider: string; id: string; label?: string };
 
 export async function fetchModels(): Promise<ProviderModel[]> {
   // Point to the versioned endpoint to avoid legacy collisions.
-  const url = `${BASE_URL}/ai/models`;
+  const url = `${BASE_URL}/ai/models?format=compact`;
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to list models');
 
