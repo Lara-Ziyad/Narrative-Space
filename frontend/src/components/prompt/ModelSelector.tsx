@@ -1,8 +1,11 @@
-// [NS-STEP6-PR1] ModelSelector: id-only labels, sanitize, fallback.
 import React, { useEffect, useState } from 'react';
 import { fetchModels, type ProviderModel } from '@api';
 
-type ModelSelectorProps = { model: string; onChange: (value: string) => void; };
+type ModelSelectorProps = {
+  model: string;
+  onChange: (value: string) => void;
+};
+
 const LS_KEY = 'ns.selectedModel';
 
 const FALLBACK: ProviderModel[] = [
@@ -11,59 +14,51 @@ const FALLBACK: ProviderModel[] = [
   { provider: 'openai', id: 'gpt-4o',       label: 'gpt-4o' },
 ];
 
-const LEGACY_MAP: Record<string, string> = {
-  '4.1-mini': 'openai:gpt-4.1-mini',
-  'claude':   'anthropic:claude-3-haiku',
-  'gemini':   'google:gemini-1.5-pro',
-  'llama':    'ollama:llama3',
-};
-
-const sanitize = (v: string | null) => {
-  if (!v) return null;
-  if (LEGACY_MAP[v]) return LEGACY_MAP[v];
-  if (v.includes('undefined')) return null;
-  if (v.includes('.')) return v.replace(/^([a-z0-9_-]+)\./i, '$1:'); // provider.model -> provider:model
-  if (!v.includes(':')) return null;
-  return v;
-};
+function sanitize(val: string | null): string | null {
+  if (!val) return null;
+  if (val.includes('undefined')) return null;
+  if (val.includes('.')) val = val.replace(/^([a-z0-9_-]+)\./i, '$1:');
+  if (!val.includes(':')) return null;
+  return val;
+}
 
 const ModelSelector: React.FC<ModelSelectorProps> = ({ model, onChange }) => {
   const [models, setModels] = useState<ProviderModel[]>([]);
   const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
+  const [warn, setWarn] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = sanitize(localStorage.getItem(LS_KEY));
-    const prop = sanitize(model);
-    if (saved && !prop) onChange(saved);
-    if (localStorage.getItem(LS_KEY) && !saved) localStorage.removeItem(LS_KEY);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchModels()
-      .then((data) => {
-        setErr(null);
+    let mounted = true;
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await fetchModels();
         const list = (data?.length ? data : FALLBACK).filter(m => m?.provider && m?.id);
+        if (!mounted) return;
         setModels(list);
+        setWarn(data?.length ? null : 'Failed to list models — using defaults.');
         const valid = new Set(list.map(m => `${m.provider}:${m.id}`));
-        if (!model || !valid.has(model)) {
-          const first = list[0];
-          const val = `${first.provider}:${first.id}`;
-          onChange(val);
-          localStorage.setItem(LS_KEY, val);
-        }
-      })
-      .catch((e) => {
-        setErr(e?.message ?? 'Failed to list models');
+        const fromProp = sanitize(model);
+        const fromLS   = sanitize(localStorage.getItem(LS_KEY));
+        const first    = `${list[0].provider}:${list[0].id}`;
+        const chosen   = valid.has(fromProp || '') ? (fromProp as string)
+                        : valid.has(fromLS || '') ? (fromLS as string)
+                        : first;
+        if (chosen !== model) onChange(chosen);
+        localStorage.setItem(LS_KEY, chosen);
+      } catch {
+        if (!mounted) return;
         setModels(FALLBACK);
-        const val = `${FALLBACK[0].provider}:${FALLBACK[0].id}`;
-        onChange(val);
-        localStorage.setItem(LS_KEY, val);
-      })
-      .finally(() => setLoading(false));
-  }, [model, onChange]);
+        setWarn('Failed to list models — using defaults.');
+        const first = `${FALLBACK[0].provider}:${FALLBACK[0].id}`;
+        if (first !== model) onChange(first);
+        localStorage.setItem(LS_KEY, first);
+      } finally {
+        setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []); // run once
 
   useEffect(() => {
     const s = sanitize(model);
@@ -72,20 +67,27 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({ model, onChange }) => {
 
   if (loading) return <span>Loading models…</span>;
 
+  const options = models.length ? models : FALLBACK;
+  const current = sanitize(model) || `${options[0].provider}:${options[0].id}`;
+
   return (
     <label>
       <span className="text-amberwood">AI Model:</span>
-      {err && <div className="text-red-600 text-sm mb-1">Failed to list models — using defaults.</div>}
+      {warn && <div className="text-red-600 text-sm mb-1">{warn}</div>}
       <select
-        value={sanitize(model) || `${FALLBACK[0].provider}:${FALLBACK[0].id}`}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
         className="form-glass"
+        value={current}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+          const next = sanitize(e.target.value) || e.target.value;
+          onChange(next);
+          localStorage.setItem(LS_KEY, next);
+        }}
       >
-        {models.map((m) => {
+        {options.map((m) => {
           const value = `${m.provider}:${m.id}`;
           return (
             <option key={value} value={value}>
-              {m.label ?? m.id} {/* id-only label */}
+              {m.label ?? m.id}
             </option>
           );
         })}

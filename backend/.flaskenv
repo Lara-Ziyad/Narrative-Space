@@ -1,0 +1,2 @@
+FLASK_APP=backend.wsgi
+FLASK_RUN_PORT=8000

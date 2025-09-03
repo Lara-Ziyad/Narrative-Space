@@ -5,12 +5,13 @@ export type GenerateRequest = { prompt: string; type: string; model: string };
 export type ProviderModel = { provider: string; id: string; label?: string };
 
 export async function fetchModels(): Promise<ProviderModel[]> {
-  // [NS-STEP6-PR1] Point to the versioned endpoint to avoid legacy collisions.
+  // Point to the versioned endpoint to avoid legacy collisions.
   const url = `${BASE_URL}/ai/models`;
   const res = await fetch(url, { credentials: 'include' });
   if (!res.ok) throw new Error('Failed to list models');
 
-  const raw = await res.json(); // should be array of 6 objects
+  const raw = await res.json();
+   // raw is expected to be an array in compact mode; still keep a tolerant fallback.
   const arr = Array.isArray(raw) ? raw : (Array.isArray((raw as any)?.models) ? (raw as any).models : []);
 
   const normalized: ProviderModel[] = (arr as any[]).map((m: any) => {
@@ -24,7 +25,7 @@ export async function fetchModels(): Promise<ProviderModel[]> {
     return { provider, id, label };
   }).filter(Boolean) as ProviderModel[];
 
-  // [NS-STEP6-PR1] Debug log (safe in dev)
+  // Debug log (safe in dev)
   // eslint-disable-next-line no-console
   console.log('[ai/models] url:', url, 'raw:', raw, 'normalized:', normalized);
 

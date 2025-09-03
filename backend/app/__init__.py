@@ -7,8 +7,10 @@ from backend.extensions import db, bcrypt, login_manager, client
 from flask_cors import CORS
 from .ai import  ai_bp
 from openai import OpenAI
+# from .ai.models.routes import models_bp
 
-
+print("[NS] backend package __init__ loaded")  # TEMP debug; remove later if you want.
+__all__ = []
 
 def create_app():
     load_dotenv()
@@ -33,7 +35,7 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(ai_bp, url_prefix='/ai')
-
+    # app.register_blueprint(models_bp)
     # ensure DB tables exist
     with app.app_context():
         # db.drop_all()
@@ -42,5 +44,6 @@ def create_app():
         print("🔺 Creates tables")
 
         print([r.rule for r in app.url_map.iter_rules() if r.rule.startswith("/ai/")])
-
+        routes = sorted({r.rule for r in app.url_map.iter_rules() if r.rule.startswith("/ai/")})
+        print("[NS] AI routes:", routes)
     return app
