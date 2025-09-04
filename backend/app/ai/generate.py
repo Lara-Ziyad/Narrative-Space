@@ -7,7 +7,7 @@ from backend.rag.retriever_factory import get_retriever
 from ..middleware import token_bucket_limit
 import time
 
-from .provider_factory import generate_with_provider, ProviderError, NotConfiguredError
+from .providers.provider_factory import generate_with_provider, ProviderError, NotConfiguredError
 
 #Guard system prompt
 GUARD_SYSTEM = (
@@ -95,6 +95,8 @@ def generate():
             "sources": hits,
             "retrieval_mode": retrieval_mode
         }), 200
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
     except NotConfiguredError as e:
         # Provider exists but is not configured in PR2 or missing API key
         return jsonify({"error": str(e)}), 501
