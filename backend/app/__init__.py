@@ -6,7 +6,6 @@ from .auth.routes import auth_bp
 from backend.extensions import db, bcrypt, login_manager, client
 from flask_cors import CORS
 from .ai import  ai_bp
-from openai import OpenAI
 # from .ai.models.routes import models_bp
 
 print("[NS] backend package __init__ loaded")  # TEMP debug; remove later if you want.
@@ -17,7 +16,15 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret')
     CORS(app, supports_credentials=True)
-    app.openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+    # Provider clients (import here to avoid circular imports during tests)
+    from .ai.clients_bootstrap import attach_openai, attach_anthropic
+
+    if not hasattr(app, "openai_client"):
+        attach_openai(app)
+    if not hasattr(app, "anthropic_client"):
+        attach_anthropic(app)
+
     # Set a reliable absolute path for SQLite
     basedir = os.path.abspath(os.path.dirname(__file__))
     db_path = os.path.join(basedir, '..', 'instance', 'db.sqlite3')

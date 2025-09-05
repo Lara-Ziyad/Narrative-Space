@@ -6,6 +6,14 @@ from .registry import curated_models, now_iso
 
 models_bp = Blueprint("ai_models", __name__)
 
+def _pick_text_default(curated):
+    # chose the first available model
+    for m in curated:
+        if m.get("available"):
+            return f'{m["provider"]}:{m["id"]}'
+    return "openai:gpt-4o-mini" # fallback
+
+
 @models_bp.route("/models", methods=["GET"], strict_slashes=False)
 @login_required
 def list_models():
@@ -17,7 +25,7 @@ def list_models():
         simple = [{"provider": m["provider"], "id": m["id"], "label": m["label"]} for m in curated]
         return jsonify(simple), 200
 
-    defaults = {"text": "openai:gpt-4o-mini"}
+    defaults = {"text": _pick_text_default(curated)}
     envelope = {"models": curated, "meta": {"count": len(curated), "ts": now_iso(), "defaults": defaults}}
     return jsonify(envelope), 200
 

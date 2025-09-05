@@ -1,5 +1,6 @@
 from typing import Tuple
-from .openai_provider import generate_openai
+from .openai_provider import OpenAIProvider
+from .anthropic_provider import  AnthropicProvider
 
 
 try:
@@ -77,19 +78,23 @@ def generate_with_provider(
     provider, model_id = parse_model_spec(raw_model)
 
     if provider == "openai":
-        try:
-            return generate_openai(
-                model_id,
-                system=system,
-                user=user,
-                temperature=temperature,
-                max_tokens=max_tokens,
+
+       prov = OpenAIProvider()
+       return prov.generate(
+            model=model_id,
+            system=system, user=user, temperature=temperature, max_tokens=max_tokens
             )
-        except RuntimeError as e:
-            # Missing app.openai_client or similar misconfig
-            raise NotConfiguredError(str(e)) from e
-        except Exception as e:
-            raise ProviderError(str(e)) from e
+
+    if provider == "anthropic":
+        prov = AnthropicProvider()
+        return prov.generate(
+            model=model_id,
+            system=system,
+            user=user,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+
 
     # For known-but-not-yet-configured providers
     raise NotConfiguredError(f"Provider '{provider}' is not configured yet in PR2.")

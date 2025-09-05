@@ -71,11 +71,16 @@ def capabilities(provider: str, model_id: str) -> Dict[str, bool]:
         "rag_ready": True,  # We inject context before sending, so RAG works uniformly.
     }
 
-
+CURATED_BASE = [
+    {"provider": "openai",    "id": "gpt-4.1-mini"},
+    {"provider": "openai",    "id": "gpt-4o-mini"},
+    {"provider": "openai",    "id": "gpt-4o"},
+    {"provider": "anthropic", "id": "claude-3-haiku"},
+    {"provider": "google",    "id": "gemini-1.5-pro"},
+    {"provider": "ollama",    "id": "llama3"},
+]
 def curated_models() -> List[Dict[str, Any]]:
-    """
-    The curated set used across the app. Enriched with description, capabilities, and availability.
-    """
+
     base = [
         {"provider": "openai",    "id": "gpt-4.1-mini"},
         {"provider": "openai",    "id": "gpt-4o-mini"},
