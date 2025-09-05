@@ -3,6 +3,7 @@ from .openai_provider import OpenAIProvider
 from .anthropic_provider import  AnthropicProvider
 from .ollama_provider import generate_ollama
 
+from .gemini_provider import GeminiProvider
 try:
     from . import NotConfiguredError, ProviderError
 except Exception:
@@ -95,10 +96,19 @@ def generate_with_provider(
             max_tokens=max_tokens,
         )
     if provider == "ollama":
-        # [NS-STEP6-PR7] dispatch to local/remote Ollama
         return generate_ollama(
             model_id,
             system=system, user=user, temperature=temperature, max_tokens=max_tokens,
+        )
+
+    if provider == "google":
+        prov = GeminiProvider()
+        return prov.generate(
+            model=model_id,
+            system=system,
+            user=user,
+            temperature=temperature,
+            max_tokens=max_tokens,
         )
 
     # For known-but-not-yet-configured providers

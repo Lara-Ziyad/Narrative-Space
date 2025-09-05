@@ -18,14 +18,16 @@ def create_app():
     CORS(app, supports_credentials=True)
 
     # Provider clients (import here to avoid circular imports during tests)
-    from .ai.clients_bootstrap import attach_openai, attach_anthropic
+    from backend.app.ai.clients_bootstrap import attach_openai, attach_anthropic,attach_ollama,attach_gemini
 
     if not hasattr(app, "openai_client"):
         attach_openai(app)
     if not hasattr(app, "anthropic_client"):
         attach_anthropic(app)
     if not hasattr(app, "ollama_client"):
-        attach_anthropic(app)
+        attach_ollama(app)
+    if not hasattr(app, "gemini_on"):
+        attach_gemini(app)
 
     # Set a reliable absolute path for SQLite
     basedir = os.path.abspath(os.path.dirname(__file__))

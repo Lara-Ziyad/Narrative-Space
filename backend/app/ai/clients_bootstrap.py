@@ -38,3 +38,15 @@ def attach_ollama(app: Flask) -> None:
         setattr(app, "ollama_client", None)  # type: ignore[attr-defined]
         app.logger.warning(f"Ollama client init failed: {e}")
 
+def attach_gemini(app: Flask) -> None:
+    key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+    if not key:
+        setattr(app, "gemini_on", False)  # type: ignore[attr-defined]
+        return
+    try:
+        import google.generativeai as genai  # type: ignore
+        genai.configure(api_key=key)  # SDK is global; we just mark it on
+        setattr(app, "gemini_on", True)  # type: ignore[attr-defined]
+    except Exception as e:
+        setattr(app, "gemini_on", False)  # type: ignore[attr-defined]
+        app.logger.warning(f"[NS-STEP6] Gemini init failed: {e}")

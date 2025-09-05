@@ -7,7 +7,7 @@ from typing import Dict, List, Any
 def is_available(provider: str) -> bool:
     """
     Return whether a provider is currently configured (env-based).
-    Adjust logic as your deployment needs evolve.
+    Adjust logic as my deployment needs evolve.
     """
     if provider == "openai":
         return bool(os.getenv("OPENAI_API_KEY"))
@@ -39,7 +39,7 @@ def required_env(provider: str) -> List[str]:
 def describe(provider: str, model_id: str) -> str:
     """
     Short, human-readable description per model.
-    You can refine these over time without touching the route handlers.
+    We can refine these over time without touching the route handlers.
     """
     if provider == "openai":
         if model_id == "gpt-4o":
@@ -59,13 +59,15 @@ def describe(provider: str, model_id: str) -> str:
 
 
 def capabilities(provider: str, model_id: str) -> Dict[str, bool]:
-    """
-    Binary capability flags; keep it simple and useful for UI toggles.
-    """
-    is_vision = (provider == "openai" and model_id in {"gpt-4o", "gpt-4o-mini"})
+
+    anthropic_vision = provider == "anthropic" and model_id.startswith("claude-3-")
+    openai_vision = provider == "openai" and model_id in {"gpt-4o", "gpt-4o-mini"}
+    gemini_vision = provider == "google" and model_id.startswith("gemini-1.5")
+
+    is_vision = openai_vision or gemini_vision or anthropic_vision
     return {
         "text_generation": True,
-        "vision_input": is_vision,
+        "vision_input": bool(is_vision),
         "rag_ready": True,  # We inject context before sending, so RAG works uniformly.
     }
 
