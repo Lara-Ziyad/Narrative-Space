@@ -24,6 +24,8 @@ def create_app():
         attach_openai(app)
     if not hasattr(app, "anthropic_client"):
         attach_anthropic(app)
+    if not hasattr(app, "ollama_client"):
+        attach_anthropic(app)
 
     # Set a reliable absolute path for SQLite
     basedir = os.path.abspath(os.path.dirname(__file__))

@@ -16,9 +16,7 @@ def is_available(provider: str) -> bool:
     if provider == "google":
         return bool(os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"))
     if provider == "ollama":
-        # Treat Ollama as available when host is provided.
-        # If you prefer optimistic default, change to: return True
-        return bool(os.getenv("OLLAMA_HOST"))
+        return bool(os.getenv("OLLAMA_HOST") or True)
     return False
 
 
@@ -71,14 +69,6 @@ def capabilities(provider: str, model_id: str) -> Dict[str, bool]:
         "rag_ready": True,  # We inject context before sending, so RAG works uniformly.
     }
 
-CURATED_BASE = [
-    {"provider": "openai",    "id": "gpt-4.1-mini"},
-    {"provider": "openai",    "id": "gpt-4o-mini"},
-    {"provider": "openai",    "id": "gpt-4o"},
-    {"provider": "anthropic", "id": "claude-3-haiku"},
-    {"provider": "google",    "id": "gemini-1.5-pro"},
-    {"provider": "ollama",    "id": "llama3"},
-]
 def curated_models() -> List[Dict[str, Any]]:
 
     base = [

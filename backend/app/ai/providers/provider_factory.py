@@ -1,7 +1,7 @@
 from typing import Tuple
 from .openai_provider import OpenAIProvider
 from .anthropic_provider import  AnthropicProvider
-
+from .ollama_provider import generate_ollama
 
 try:
     from . import NotConfiguredError, ProviderError
@@ -94,7 +94,12 @@ def generate_with_provider(
             temperature=temperature,
             max_tokens=max_tokens,
         )
-
+    if provider == "ollama":
+        # [NS-STEP6-PR7] dispatch to local/remote Ollama
+        return generate_ollama(
+            model_id,
+            system=system, user=user, temperature=temperature, max_tokens=max_tokens,
+        )
 
     # For known-but-not-yet-configured providers
     raise NotConfiguredError(f"Provider '{provider}' is not configured yet in PR2.")
